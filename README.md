@@ -9,7 +9,7 @@ Editor Visual de Código utilizando Blockly
 python -m SimpleHTTPServer 8000
 ```
 
-http://localhost:8000/code/index.html
+http://localhost:8000/demos/code/index.html
 
 
 ![](doc/output.png)
