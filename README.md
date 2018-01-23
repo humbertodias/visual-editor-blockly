@@ -5,8 +5,15 @@ Editor Visual de Código utilizando Blockly
 
 # Executando
 
+Python2
 ```
 python -m SimpleHTTPServer 8000
+```
+ou
+
+Python3
+```
+python -m http.server 8000
 ```
 
 http://localhost:8000/demos/code/index.html
