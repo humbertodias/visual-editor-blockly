@@ -5,7 +5,6 @@ var MSG = {
   runTooltip: "Keyra forritið sem kubbarnir á vinnusvæðinu mynda.",
   badCode: "Villa í forriti:\n%1",
   timeout: "Forritið hefur endurtekið sig of oft.",
-  discard: "Eyða öllum %1 kubbunum?",
   trashTooltip: "Fleygja öllum kubbum.",
   catLogic: "Rökvísi",
   catLoops: "Lykkjur",
@@ -20,6 +19,6 @@ var MSG = {
   httpRequestError: "Það kom upp vandamál með beiðnina.",
   linkAlert: "Deildu kubbunum þínum með þessari krækju:",
   hashError: "Því miður, '%1' passar ekki við neitt vistað forrit.",
-  xmlError: "Gat ekki hlaðið vistuðu skrána þína. Var hún kannske búin til í annarri útgáfu af Blockly?",
-  badXml: "Villa við úrvinnslu XML:\n%1\n\nVeldu 'Í lagi' til að sleppa breytingum eða 'Hætta við' til að halda áfram með XML."
+  loadError: "Gat ekki hlaðið vistuðu skrána þína. Var hún kannske búin til í annarri útgáfu af Blockly?",
+  parseError: "Villa við úrvinnslu %1:\n%2\n\nVeldu 'Í lagi' til að sleppa breytingum eða 'Hætta við' til að halda áfram með %1."
 };

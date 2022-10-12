@@ -1,368 +1,375 @@
 /**
  * @license
- * Visual Blocks Editor
- *
- * Copyright 2012 Google Inc.
- * https://developers.google.com/blockly/
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2012 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 /**
  * @fileoverview Loop blocks for Blockly.
- * @author fraser@google.com (Neil Fraser)
+ * @suppress {checkTypes}
  */
 'use strict';
 
-goog.provide('Blockly.Blocks.loops');
+goog.module('Blockly.libraryBlocks.loops');
 
-goog.require('Blockly.Blocks');
+/* eslint-disable-next-line no-unused-vars */
+const AbstractEvent = goog.requireType('Blockly.Events.Abstract');
+const ContextMenu = goog.require('Blockly.ContextMenu');
+const Events = goog.require('Blockly.Events');
+const Extensions = goog.require('Blockly.Extensions');
+const Variables = goog.require('Blockly.Variables');
+const xmlUtils = goog.require('Blockly.utils.xml');
+/* eslint-disable-next-line no-unused-vars */
+const {Block} = goog.requireType('Blockly.Block');
+// const {BlockDefinition} = goog.requireType('Blockly.blocks');
+// TODO (6248): Properly import the BlockDefinition type.
+/* eslint-disable-next-line no-unused-vars */
+const BlockDefinition = Object;
+const {Msg} = goog.require('Blockly.Msg');
+const {createBlockDefinitionsFromJsonArray, defineBlocks} = goog.require('Blockly.common');
+/** @suppress {extraRequire} */
+goog.require('Blockly.FieldDropdown');
+/** @suppress {extraRequire} */
+goog.require('Blockly.FieldLabel');
+/** @suppress {extraRequire} */
+goog.require('Blockly.FieldNumber');
+/** @suppress {extraRequire} */
+goog.require('Blockly.FieldVariable');
+/** @suppress {extraRequire} */
+goog.require('Blockly.Warning');
 
 
 /**
- * Common HSV hue for all blocks in this category.
+ * A dictionary of the block definitions provided by this module.
+ * @type {!Object<string, !BlockDefinition>}
  */
-Blockly.Blocks.loops.HUE = 120;
-
-Blockly.Blocks['controls_repeat_ext'] = {
-  /**
-   * Block for repeat n times (external number).
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": Blockly.Msg.CONTROLS_REPEAT_TITLE,
-      "args0": [
-        {
-          "type": "input_value",
-          "name": "TIMES",
-          "check": "Number"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "colour": Blockly.Blocks.loops.HUE,
-      "tooltip": Blockly.Msg.CONTROLS_REPEAT_TOOLTIP,
-      "helpUrl": Blockly.Msg.CONTROLS_REPEAT_HELPURL
-    });
-    this.appendStatementInput('DO')
-        .appendField(Blockly.Msg.CONTROLS_REPEAT_INPUT_DO);
+const blocks = createBlockDefinitionsFromJsonArray([
+  // Block for repeat n times (external number).
+  {
+    'type': 'controls_repeat_ext',
+    'message0': '%{BKY_CONTROLS_REPEAT_TITLE}',
+    'args0': [{
+      'type': 'input_value',
+      'name': 'TIMES',
+      'check': 'Number',
+    }],
+    'message1': '%{BKY_CONTROLS_REPEAT_INPUT_DO} %1',
+    'args1': [{
+      'type': 'input_statement',
+      'name': 'DO',
+    }],
+    'previousStatement': null,
+    'nextStatement': null,
+    'style': 'loop_blocks',
+    'tooltip': '%{BKY_CONTROLS_REPEAT_TOOLTIP}',
+    'helpUrl': '%{BKY_CONTROLS_REPEAT_HELPURL}',
   },
-  isLoop: true,
-  typeblock: [{entry: Blockly.Msg.CONTROLS_REPEAT_TYPEBLOCK,
-               values: {'TIMES' : 10 }}]
+  // Block for repeat n times (internal number).
+  // The 'controls_repeat_ext' block is preferred as it is more flexible.
+  {
+    'type': 'controls_repeat',
+    'message0': '%{BKY_CONTROLS_REPEAT_TITLE}',
+    'args0': [{
+      'type': 'field_number',
+      'name': 'TIMES',
+      'value': 10,
+      'min': 0,
+      'precision': 1,
+    }],
+    'message1': '%{BKY_CONTROLS_REPEAT_INPUT_DO} %1',
+    'args1': [{
+      'type': 'input_statement',
+      'name': 'DO',
+    }],
+    'previousStatement': null,
+    'nextStatement': null,
+    'style': 'loop_blocks',
+    'tooltip': '%{BKY_CONTROLS_REPEAT_TOOLTIP}',
+    'helpUrl': '%{BKY_CONTROLS_REPEAT_HELPURL}',
+  },
+  // Block for 'do while/until' loop.
+  {
+    'type': 'controls_whileUntil',
+    'message0': '%1 %2',
+    'args0': [
+      {
+        'type': 'field_dropdown',
+        'name': 'MODE',
+        'options': [
+          ['%{BKY_CONTROLS_WHILEUNTIL_OPERATOR_WHILE}', 'WHILE'],
+          ['%{BKY_CONTROLS_WHILEUNTIL_OPERATOR_UNTIL}', 'UNTIL'],
+        ],
+      },
+      {
+        'type': 'input_value',
+        'name': 'BOOL',
+        'check': 'Boolean',
+      },
+    ],
+    'message1': '%{BKY_CONTROLS_REPEAT_INPUT_DO} %1',
+    'args1': [{
+      'type': 'input_statement',
+      'name': 'DO',
+    }],
+    'previousStatement': null,
+    'nextStatement': null,
+    'style': 'loop_blocks',
+    'helpUrl': '%{BKY_CONTROLS_WHILEUNTIL_HELPURL}',
+    'extensions': ['controls_whileUntil_tooltip'],
+  },
+  // Block for 'for' loop.
+  {
+    'type': 'controls_for',
+    'message0': '%{BKY_CONTROLS_FOR_TITLE}',
+    'args0': [
+      {
+        'type': 'field_variable',
+        'name': 'VAR',
+        'variable': null,
+      },
+      {
+        'type': 'input_value',
+        'name': 'FROM',
+        'check': 'Number',
+        'align': 'RIGHT',
+      },
+      {
+        'type': 'input_value',
+        'name': 'TO',
+        'check': 'Number',
+        'align': 'RIGHT',
+      },
+      {
+        'type': 'input_value',
+        'name': 'BY',
+        'check': 'Number',
+        'align': 'RIGHT',
+      },
+    ],
+    'message1': '%{BKY_CONTROLS_REPEAT_INPUT_DO} %1',
+    'args1': [{
+      'type': 'input_statement',
+      'name': 'DO',
+    }],
+    'inputsInline': true,
+    'previousStatement': null,
+    'nextStatement': null,
+    'style': 'loop_blocks',
+    'helpUrl': '%{BKY_CONTROLS_FOR_HELPURL}',
+    'extensions': [
+      'contextMenu_newGetVariableBlock',
+      'controls_for_tooltip',
+    ],
+  },
+  // Block for 'for each' loop.
+  {
+    'type': 'controls_forEach',
+    'message0': '%{BKY_CONTROLS_FOREACH_TITLE}',
+    'args0': [
+      {
+        'type': 'field_variable',
+        'name': 'VAR',
+        'variable': null,
+      },
+      {
+        'type': 'input_value',
+        'name': 'LIST',
+        'check': 'Array',
+      },
+    ],
+    'message1': '%{BKY_CONTROLS_REPEAT_INPUT_DO} %1',
+    'args1': [{
+      'type': 'input_statement',
+      'name': 'DO',
+    }],
+    'previousStatement': null,
+    'nextStatement': null,
+    'style': 'loop_blocks',
+    'helpUrl': '%{BKY_CONTROLS_FOREACH_HELPURL}',
+    'extensions': [
+      'contextMenu_newGetVariableBlock',
+      'controls_forEach_tooltip',
+    ],
+  },
+  // Block for flow statements: continue, break.
+  {
+    'type': 'controls_flow_statements',
+    'message0': '%1',
+    'args0': [{
+      'type': 'field_dropdown',
+      'name': 'FLOW',
+      'options': [
+        ['%{BKY_CONTROLS_FLOW_STATEMENTS_OPERATOR_BREAK}', 'BREAK'],
+        ['%{BKY_CONTROLS_FLOW_STATEMENTS_OPERATOR_CONTINUE}', 'CONTINUE'],
+      ],
+    }],
+    'previousStatement': null,
+    'style': 'loop_blocks',
+    'helpUrl': '%{BKY_CONTROLS_FLOW_STATEMENTS_HELPURL}',
+    'suppressPrefixSuffix': true,
+    'extensions': [
+      'controls_flow_tooltip',
+      'controls_flow_in_loop_check',
+    ],
+  },
+]);
+exports.blocks = blocks;
+
+/**
+ * Tooltips for the 'controls_whileUntil' block, keyed by MODE value.
+ * @see {Extensions#buildTooltipForDropdown}
+ * @readonly
+ */
+const WHILE_UNTIL_TOOLTIPS = {
+  'WHILE': '%{BKY_CONTROLS_WHILEUNTIL_TOOLTIP_WHILE}',
+  'UNTIL': '%{BKY_CONTROLS_WHILEUNTIL_TOOLTIP_UNTIL}',
 };
 
-Blockly.Blocks['controls_repeat'] = {
-  /**
-   * Block for repeat n times (internal number).
-   * The 'controls_repeat_ext' block is preferred as it is more flexible.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": Blockly.Msg.CONTROLS_REPEAT_TITLE,
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "TIMES",
-          "text": "10"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "colour": Blockly.Blocks.loops.HUE,
-      "tooltip": Blockly.Msg.CONTROLS_REPEAT_TOOLTIP,
-      "helpUrl": Blockly.Msg.CONTROLS_REPEAT_HELPURL
-    });
-    this.appendStatementInput('DO')
-        .appendField(Blockly.Msg.CONTROLS_REPEAT_INPUT_DO);
-    this.getField('TIMES').setChangeHandler(
-        Blockly.FieldTextInput.nonnegativeIntegerValidator);
-  },
-  isLoop: true//,
-// No typeblock because this is deprecated in
-//     favor of controls_repeat_ext
-//  typeblock: [{entry: Blockly.Msg.CONTROLS_REPEAT_TYPEBLOCK,
-//               fields: {'TIMES' : 10 }}]
+Extensions.register(
+    'controls_whileUntil_tooltip',
+    Extensions.buildTooltipForDropdown('MODE', WHILE_UNTIL_TOOLTIPS));
+
+/**
+ * Tooltips for the 'controls_flow_statements' block, keyed by FLOW value.
+ * @see {Extensions#buildTooltipForDropdown}
+ * @readonly
+ */
+const BREAK_CONTINUE_TOOLTIPS = {
+  'BREAK': '%{BKY_CONTROLS_FLOW_STATEMENTS_TOOLTIP_BREAK}',
+  'CONTINUE': '%{BKY_CONTROLS_FLOW_STATEMENTS_TOOLTIP_CONTINUE}',
 };
 
-Blockly.Blocks['controls_whileUntil'] = {
-  /**
-   * Block for 'do while/until' loop.
-   * @this Blockly.Block
-   */
-  init: function() {
-    var OPERATORS =
-        [[Blockly.Msg.CONTROLS_WHILEUNTIL_OPERATOR_WHILE, 'WHILE'],
-         [Blockly.Msg.CONTROLS_WHILEUNTIL_OPERATOR_UNTIL, 'UNTIL']];
-    this.setHelpUrl(Blockly.Msg.CONTROLS_WHILEUNTIL_HELPURL);
-    this.setColour(Blockly.Blocks.loops.HUE);
-    this.appendValueInput('BOOL')
-        .setCheck('Boolean')
-        .appendField(new Blockly.FieldDropdown(OPERATORS), 'MODE');
-    this.appendStatementInput('DO')
-        .appendField(Blockly.Msg.CONTROLS_WHILEUNTIL_INPUT_DO);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    // Assign 'this' to a variable for use in the tooltip closure below.
-    var thisBlock = this;
-    this.setTooltip(function() {
-      var op = thisBlock.getFieldValue('MODE');
-      var TOOLTIPS = {
-        'WHILE': Blockly.Msg.CONTROLS_WHILEUNTIL_TOOLTIP_WHILE,
-        'UNTIL': Blockly.Msg.CONTROLS_WHILEUNTIL_TOOLTIP_UNTIL
-      };
-      return TOOLTIPS[op];
-    });
-  },
-  isLoop: true,
-  typeblock: [{entry: Blockly.Msg.CONTROLS_WHILEUNTIL_WHILE_TYPEBLOCK,
-               fields: {'MODE' : 'WHILE' }},
-              {entry: Blockly.Msg.CONTROLS_WHILEUNTIL_UNTIL_TYPEBLOCK,
-               fields: {'MODE' : 'UNTIL' }}]
-};
+Extensions.register(
+    'controls_flow_tooltip',
+    Extensions.buildTooltipForDropdown('FLOW', BREAK_CONTINUE_TOOLTIPS));
 
-Blockly.Blocks['controls_for'] = {
+/**
+ * Mixin to add a context menu item to create a 'variables_get' block.
+ * Used by blocks 'controls_for' and 'controls_forEach'.
+ * @mixin
+ * @augments Block
+ * @package
+ * @readonly
+ */
+const CUSTOM_CONTEXT_MENU_CREATE_VARIABLES_GET_MIXIN = {
   /**
-   * Block for 'for' loop.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": Blockly.Msg.CONTROLS_FOR_TITLE,
-      "args0": [
-        {
-          "type": "field_variable",
-          "name": "VAR",
-          "variable": null
-        },
-        {
-          "type": "input_value",
-          "name": "FROM",
-          "check": "Number",
-          "align": "RIGHT"
-        },
-        {
-          "type": "input_value",
-          "name": "TO",
-          "check": "Number",
-          "align": "RIGHT"
-        },
-        {
-          "type": "input_value",
-          "name": "BY",
-          "check": "Number",
-          "align": "RIGHT"
-        }
-      ],
-      "inputsInline": true,
-      "previousStatement": null,
-      "nextStatement": null,
-      "colour": Blockly.Blocks.loops.HUE,
-      "helpUrl": Blockly.Msg.CONTROLS_FOR_HELPURL
-    });
-    this.appendStatementInput('DO')
-        .appendField(Blockly.Msg.CONTROLS_FOR_INPUT_DO);
-    // Assign 'this' to a variable for use in the tooltip closure below.
-    var thisBlock = this;
-    this.setTooltip(function() {
-      return Blockly.Msg.CONTROLS_FOR_TOOLTIP.replace('%1',
-          thisBlock.getFieldValue('VAR'));
-    });
-  },
-  isLoop: true,
-  /**
-   * Return all variables referenced by this block.
-   * @return {!Array.<string>} List of variable names.
-   * @this Blockly.Block
-   */
-  getVars: function() {
-    return [this.getFieldValue('VAR')];
-  },
-  /**
-   * Return all types of variables referenced by this block.
-   * @return {!Array.<Object>} List of variable names with their types.
-   * @this Blockly.Block
-   */
-  getVarsTypes: function() {
-      var vartypes = {};
-      vartypes[this.getFieldValue('VAR')] = ['Number'];
-      return vartypes;
-  },
-  /**
-   * Notification that a variable is renaming.
-   * If the name matches one of this block's variables, rename it.
-   * @param {string} oldName Previous name of variable.
-   * @param {string} newName Renamed variable.
-   * @this Blockly.Block
-   */
-  renameVar: function(oldName, newName) {
-    if (Blockly.Names.equals(oldName, this.getFieldValue('VAR'))) {
-      this.setFieldValue(newName, 'VAR');
-    }
-  },
-  /**
-   * Add menu option to create getter block for loop variable.
+   * Add context menu option to create getter block for the loop's variable.
+   * (customContextMenu support limited to web BlockSvg.)
    * @param {!Array} options List of menu options to add to.
-   * @this Blockly.Block
+   * @this {Block}
    */
   customContextMenu: function(options) {
-    if (!this.isCollapsed()) {
-      var option = {enabled: true};
-      var name = this.getFieldValue('VAR');
-      option.text = Blockly.Msg.	VARIABLES_SET_CREATE_GET.replace('%1', name);
-      var xmlField = goog.dom.createDom('field', null, name);
-      xmlField.setAttribute('name', 'VAR');
-      var xmlBlock = goog.dom.createDom('block', null, xmlField);
+    if (this.isInFlyout) {
+      return;
+    }
+    const variable = this.getField('VAR').getVariable();
+    const varName = variable.name;
+    if (!this.isCollapsed() && varName !== null) {
+      const option = {enabled: true};
+      option.text = Msg['VARIABLES_SET_CREATE_GET'].replace('%1', varName);
+      const xmlField = Variables.generateVariableFieldDom(variable);
+      const xmlBlock = xmlUtils.createElement('block');
       xmlBlock.setAttribute('type', 'variables_get');
-      option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
+      xmlBlock.appendChild(xmlField);
+      option.callback = ContextMenu.callbackFactory(this, xmlBlock);
       options.push(option);
     }
   },
-  typeblock: [{entry: Blockly.Msg.CONTROLS_FOR_TYPEBLOCK,
-               values: {'FROM': 1, 'TO': 10, 'BY': 1}}]
 };
 
-Blockly.Blocks['controls_forEach'] = {
-  /**
-   * Block for 'for each' loop.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": Blockly.Msg.CONTROLS_FOREACH_TITLE,
-      "args0": [
-        {
-          "type": "field_variable",
-          "name": "VAR",
-          "variable": null
-        },
-        {
-          "type": "input_value",
-          "name": "LIST",
-          "check": "Array"
-        }
-      ],
-      "previousStatement": null,
-      "nextStatement": null,
-      "colour": Blockly.Blocks.loops.HUE,
-      "helpUrl": Blockly.Msg.CONTROLS_FOREACH_HELPURL
-    });
-    this.appendStatementInput('DO')
-        .appendField(Blockly.Msg.CONTROLS_FOREACH_INPUT_DO);
-    // Assign 'this' to a variable for use in the tooltip closure below.
-    var thisBlock = this;
-    this.setTooltip(function() {
-      return Blockly.Msg.CONTROLS_FOREACH_TOOLTIP.replace('%1',
-          thisBlock.getFieldValue('VAR'));
-    });
-  },
-  isLoop: true,
-  /**
-   * Return all variables referenced by this block.
-   * @return {!Array.<string>} List of variable names.
-   * @this Blockly.Block
-   */
-  getVars: function() {
-    return [this.getFieldValue('VAR')];
-  },
-  /**
-   * Return all types of variables referenced by this block.
-   * @return {!Array.<Object>} List of variable names with their types.
-   * @this Blockly.Block
-   */
-  getVarsTypes: function() {
-      var vartypes = {};
-      var foundtypes = {};
-      var listblock = this.getInputTargetBlock('LIST');
-      var looptypes = listblock.getOutput();
-      if (looptypes) {
-        for (var i = 0; i < looptypes.length; i++) {
-          var type = looptypes[i];
-          var x = type.split(':');
-          foundtypes[x[1]] = 1;
-        }
-      }
+Extensions.registerMixin(
+    'contextMenu_newGetVariableBlock',
+    CUSTOM_CONTEXT_MENU_CREATE_VARIABLES_GET_MIXIN);
 
-      vartypes[this.getFieldValue('VAR')] = Object.keys(foundtypes);
-      return vartypes;
-  },
-  /**
-   * Notification that a variable is renaming.
-   * If the name matches one of this block's variables, rename it.
-   * @param {string} oldName Previous name of variable.
-   * @param {string} newName Renamed variable.
-   * @this Blockly.Block
-   */
-  renameVar: function(oldName, newName) {
-    if (Blockly.Names.equals(oldName, this.getFieldValue('VAR'))) {
-      this.setFieldValue(newName, 'VAR');
-    }
-  },
-  customContextMenu: Blockly.Blocks['controls_for'].customContextMenu,
-  typeblock: Blockly.Msg.CONTROLS_FOREACH_TYPEBLOCK
-};
+Extensions.register(
+    'controls_for_tooltip',
+    Extensions.buildTooltipWithFieldText('%{BKY_CONTROLS_FOR_TOOLTIP}', 'VAR'));
 
-Blockly.Blocks['controls_flow_statements'] = {
+Extensions.register(
+    'controls_forEach_tooltip',
+    Extensions.buildTooltipWithFieldText(
+        '%{BKY_CONTROLS_FOREACH_TOOLTIP}', 'VAR'));
+
+/**
+ * List of block types that are loops and thus do not need warnings.
+ * To add a new loop type add this to your code:
+ *
+ * // If using the Blockly npm package and es6 import syntax:
+ * import {loops} from 'blockly/blocks';
+ * loops.loopTypes.add('custom_loop');
+ *
+ * // Else if using Closure Compiler and goog.modules:
+ * const {loopTypes} = goog.require('Blockly.libraryBlocks.loops');
+ * loopTypes.add('custom_loop');
+ *
+ * // Else if using blockly_compressed + blockss_compressed.js in browser:
+ * Blockly.libraryBlocks.loopTypes.add('custom_loop');
+ *
+ * @type {!Set<string>}
+ */
+const loopTypes = new Set([
+  'controls_repeat',
+  'controls_repeat_ext',
+  'controls_forEach',
+  'controls_for',
+  'controls_whileUntil',
+]);
+exports.loopTypes = loopTypes;
+
+/**
+ * This mixin adds a check to make sure the 'controls_flow_statements' block
+ * is contained in a loop. Otherwise a warning is added to the block.
+ * @mixin
+ * @augments Block
+ * @public
+ * @readonly
+ */
+const CONTROL_FLOW_IN_LOOP_CHECK_MIXIN = {
   /**
-   * Block for flow statements: continue, break.
-   * @this Blockly.Block
+   * Is this block enclosed (at any level) by a loop?
+   * @return {Block} The nearest surrounding loop, or null if none.
+   * @this {Block}
    */
-  init: function() {
-    var OPERATORS =
-        [[Blockly.Msg.CONTROLS_FLOW_STATEMENTS_OPERATOR_BREAK, 'BREAK'],
-         [Blockly.Msg.CONTROLS_FLOW_STATEMENTS_OPERATOR_CONTINUE, 'CONTINUE']];
-    this.setHelpUrl(Blockly.Msg.CONTROLS_FLOW_STATEMENTS_HELPURL);
-    this.setColour(Blockly.Blocks.loops.HUE);
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown(OPERATORS), 'FLOW');
-    this.setPreviousStatement(true);
-    // Assign 'this' to a variable for use in the tooltip closure below.
-    var thisBlock = this;
-    this.setTooltip(function() {
-      var op = thisBlock.getFieldValue('FLOW');
-      var TOOLTIPS = {
-        'BREAK': Blockly.Msg.CONTROLS_FLOW_STATEMENTS_TOOLTIP_BREAK,
-        'CONTINUE': Blockly.Msg.CONTROLS_FLOW_STATEMENTS_TOOLTIP_CONTINUE
-      };
-      return TOOLTIPS[op];
-    });
-  },
-  /**
-   * Called whenever anything on the workspace changes.
-   * Add warning if this flow block is not nested inside a loop.
-   * @this Blockly.Block
-   */
-  onchange: function() {
-    var legal = false;
-    // Is the block nested in a loop?
-    var block = this;
+  getSurroundLoop: function() {
+    let block = this;
     do {
-      if (block.isLoop) {
-        legal = true;
-        break;
+      if (loopTypes.has(block.type)) {
+        return block;
       }
       block = block.getSurroundParent();
     } while (block);
-    if (legal) {
-      this.setWarningText(null);
-    } else {
-      this.setWarningText(Blockly.Msg.CONTROLS_FLOW_STATEMENTS_WARNING);
+    return null;
+  },
+
+  /**
+   * Called whenever anything on the workspace changes.
+   * Add warning if this flow block is not nested inside a loop.
+   * @param {!AbstractEvent} e Move event.
+   * @this {Block}
+   */
+  onchange: function(e) {
+    // Don't change state if:
+    //   * It's at the start of a drag.
+    //   * It's not a move event.
+    if (!this.workspace.isDragging || this.workspace.isDragging() ||
+        e.type !== Events.BLOCK_MOVE) {
+      return;
+    }
+    const enabled = this.getSurroundLoop(this);
+    this.setWarningText(
+        enabled ? null : Msg['CONTROLS_FLOW_STATEMENTS_WARNING']);
+    if (!this.isInFlyout) {
+      const group = Events.getGroup();
+      // Makes it so the move and the disable event get undone together.
+      Events.setGroup(e.group);
+      this.setEnabled(enabled);
+      Events.setGroup(group);
     }
   },
-  typeblock: [{entry: Blockly.Msg.CONTROLS_FLOW_STATEMENTS_BREAK_TYPEBLOCK,
-               fields: {'FLOW' : 'BREAK' }},
-              {entry: Blockly.Msg.CONTROLS_FLOW_STATEMENTS_CONTINUE_TYPEBLOCK,
-               fields: {'FLOW' : 'CONTINUE' }}]
 };
+
+Extensions.registerMixin(
+    'controls_flow_in_loop_check', CONTROL_FLOW_IN_LOOP_CHECK_MIXIN);
+
+// Register provided blocks.
+defineBlocks(blocks);

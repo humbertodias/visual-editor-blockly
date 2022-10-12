@@ -5,7 +5,6 @@ var MSG = {
   runTooltip: "Çalışma alanında bloklar tarafından tanımlanan programını çalıştırın.",
   badCode: "Program hatası:\n %1",
   timeout: "Maksimum yürütme yinelemeleri aşıldı.",
-  discard: "Tüm %1 blok silinsin mi?",
   trashTooltip: "Bütün blokları at.",
   catLogic: "Mantık",
   catLoops: "Döngüler",
@@ -20,6 +19,6 @@ var MSG = {
   httpRequestError: "İstek ile ilgili bir problem var.",
   linkAlert: "Bloklarını bu bağlantı ile paylaş:\n\n%1",
   hashError: "Üzgünüz, '%1' hiç bir kaydedilmiş program ile uyuşmuyor.",
-  xmlError: "Kaydedilen dosyanız yüklenemiyor\nBlockly'nin önceki sürümü ile kaydedilmiş olabilir mi?",
-  badXml: "XML ayrıştırma hatası:\n%1\n\nDeğişikliklerden vazgeçmek için 'Tamam'ı, düzenlemeye devam etmek için 'İptal' seçeneğini seçiniz."
+  loadError: "Kaydedilen dosyanız yüklenemiyor\nBlockly'nin önceki sürümü ile kaydedilmiş olabilir mi?",
+  parseError: "%1 ayrıştırma hatası:\n%2\n\nDeğişikliklerden vazgeçmek için 'Tamam'ı, düzenlemeye devam etmek için 'İptal' seçeneğini seçiniz."
 };

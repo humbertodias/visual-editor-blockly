@@ -5,7 +5,6 @@ var MSG = {
   runTooltip: "Ejecute el programa definido por los bloques en el área de trabajo.",
   badCode: "Error del programa:\n%1",
   timeout: "Se excedio el máximo de iteraciones ejecutadas permitidas.",
-  discard: "¿Eliminar todos los bloques %1?",
   trashTooltip: "Descartar todos los bloques.",
   catLogic: "Lógica",
   catLoops: "Secuencias",
@@ -20,6 +19,6 @@ var MSG = {
   httpRequestError: "Hubo un problema con la petición.",
   linkAlert: "Comparte tus bloques con este enlace:\n\n%1",
   hashError: "«%1» no corresponde con ningún programa guardado.",
-  xmlError: "No se pudo cargar el archivo guardado.  ¿Quizá fue creado con otra versión de Blockly?",
-  badXml: "Error de análisis XML:\n%1\n\nSelecciona OK para abandonar tus cambios o Cancelar para seguir editando el XML."
+  loadError: "No se pudo cargar el archivo guardado.  ¿Quizá fue creado con otra versión de Blockly?",
+  parseError: "Error de análisis %1:\n%2\n\nSelecciona OK para abandonar tus cambios o Cancelar para seguir editando el %1."
 };

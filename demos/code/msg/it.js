@@ -5,7 +5,6 @@ var MSG = {
   runTooltip: "Esegui il programma definito dai blocchi nell'area di lavoro.",
   badCode: "Errore programma:\n%1",
   timeout: "È stato superato il numero massimo consentito di interazioni eseguite.",
-  discard: "Cancellare tutti i %1 blocchi?",
   trashTooltip: "Elimina tutti i blocchi.",
   catLogic: "Logica",
   catLoops: "Cicli",
@@ -20,6 +19,6 @@ var MSG = {
   httpRequestError: "La richiesta non è stata soddisfatta.",
   linkAlert: "Condividi i tuoi blocchi con questo collegamento:\n\n%1",
   hashError: "Mi spiace, '%1' non corrisponde ad alcun programma salvato.",
-  xmlError: "Non è stato possibile caricare il documento.  Forse è stato creato con una versione diversa di Blockly?",
-  badXml: "Errore durante l'analisi XML:\n%1\n\nSeleziona 'OK' per abbandonare le modifiche o 'Annulla' per continuare a modificare l'XML."
+  loadError: "Non è stato possibile caricare il documento.  Forse è stato creato con una versione diversa di Blockly?",
+  parseError: "Errore durante l'analisi %1:\n%2\n\nSeleziona 'OK' per abbandonare le modifiche o 'Annulla' per continuare a modificare l'%1."
 };

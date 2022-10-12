@@ -5,7 +5,6 @@ var MSG = {
   runTooltip: "Das Programm ausführen, das von den Bausteinen im Arbeitsbereich definiert ist.",
   badCode: "Programmfehler:\n%1",
   timeout: "Die maximalen Ausführungswiederholungen wurden überschritten.",
-  discard: "Alle %1 Bausteine löschen?",
   trashTooltip: "Alle Bausteine verwerfen.",
   catLogic: "Logik",
   catLoops: "Schleifen",
@@ -20,6 +19,6 @@ var MSG = {
   httpRequestError: "Mit der Anfrage gab es ein Problem.",
   linkAlert: "Teile deine Bausteine mit diesem Link:\n\n%1",
   hashError: "„%1“ stimmt leider mit keinem gespeicherten Programm überein.",
-  xmlError: "Deine gespeicherte Datei konnte nicht geladen werden. Vielleicht wurde sie mit einer anderen Version von Blockly erstellt.",
-  badXml: "Fehler beim Parsen von XML:\n%1\n\nWähle 'OK' zum Verwerfen deiner Änderungen oder 'Abbrechen' zum weiteren Bearbeiten des XML."
+  loadError: "Deine gespeicherte Datei konnte nicht geladen werden. Vielleicht wurde sie mit einer anderen Version von Blockly erstellt.",
+  parseError: "Fehler beim Parsen von %1:\n%2\n\nWähle 'OK' zum Verwerfen deiner Änderungen oder 'Abbrechen' zum weiteren Bearbeiten des %1."
 };

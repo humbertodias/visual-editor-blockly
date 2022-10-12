@@ -1,130 +1,121 @@
 /**
  * @license
- * Visual Blocks Editor
- *
- * Copyright 2012 Google Inc.
- * https://developers.google.com/blockly/
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2012 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 /**
  * @fileoverview Colour blocks for Blockly.
- * @author fraser@google.com (Neil Fraser)
  */
 'use strict';
 
-goog.provide('Blockly.Blocks.colour');
+goog.module('Blockly.libraryBlocks.colour');
 
-goog.require('Blockly.Blocks');
+// const {BlockDefinition} = goog.requireType('Blockly.blocks');
+// TODO (6248): Properly import the BlockDefinition type.
+/* eslint-disable-next-line no-unused-vars */
+const BlockDefinition = Object;
+const {createBlockDefinitionsFromJsonArray, defineBlocks} = goog.require('Blockly.common');
+/** @suppress {extraRequire} */
+goog.require('Blockly.FieldColour');
 
 
 /**
- * Common HSV hue for all blocks in this category.
+ * A dictionary of the block definitions provided by this module.
+ * @type {!Object<string, !BlockDefinition>}
  */
-Blockly.Blocks.colour.HUE = 20;
-
-Blockly.Blocks['colour_picker'] = {
-  /**
-   * Block for colour picker.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": "%1",
-      "args0": [
-        {
-          "type": "field_colour",
-          "name": "COLOUR",
-          "colour": "#ff0000"
-        }
-      ],
-      "output": "Colour",
-      "colour": Blockly.Blocks.colour.HUE,
-      "tooltip": Blockly.Msg.COLOUR_PICKER_TOOLTIP,
-      "helpUrl": Blockly.Msg.COLOUR_PICKER_HELPURL
-    });
+const blocks = createBlockDefinitionsFromJsonArray([
+  // Block for colour picker.
+  {
+    'type': 'colour_picker',
+    'message0': '%1',
+    'args0': [
+      {
+        'type': 'field_colour',
+        'name': 'COLOUR',
+        'colour': '#ff0000',
+      },
+    ],
+    'output': 'Colour',
+    'helpUrl': '%{BKY_COLOUR_PICKER_HELPURL}',
+    'style': 'colour_blocks',
+    'tooltip': '%{BKY_COLOUR_PICKER_TOOLTIP}',
+    'extensions': ['parent_tooltip_when_inline'],
   },
-  typeblock: Blockly.Msg.COLOUR_PICKER_TYPEBLOCK
-};
 
-Blockly.Blocks['colour_random'] = {
-  /**
-   * Block for random colour.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.jsonInit({
-      "message0": Blockly.Msg.COLOUR_RANDOM_TITLE,
-      "output": "Colour",
-      "colour": Blockly.Blocks.colour.HUE,
-      "tooltip": Blockly.Msg.COLOUR_RANDOM_TOOLTIP,
-      "helpUrl": Blockly.Msg.COLOUR_RANDOM_HELPURL
-    });
+  // Block for random colour.
+  {
+    'type': 'colour_random',
+    'message0': '%{BKY_COLOUR_RANDOM_TITLE}',
+    'output': 'Colour',
+    'helpUrl': '%{BKY_COLOUR_RANDOM_HELPURL}',
+    'style': 'colour_blocks',
+    'tooltip': '%{BKY_COLOUR_RANDOM_TOOLTIP}',
   },
-  typeblock: Blockly.Msg.COLOUR_RANDOM_TYPEBLOCK
-};
 
-Blockly.Blocks['colour_rgb'] = {
-  /**
-   * Block for composing a colour from RGB components.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.setHelpUrl(Blockly.Msg.COLOUR_RGB_HELPURL);
-    this.setColour(Blockly.Blocks.colour.HUE);
-    this.appendValueInput('RED')
-        .setCheck('Number')
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField(Blockly.Msg.COLOUR_RGB_TITLE)
-        .appendField(Blockly.Msg.COLOUR_RGB_RED);
-    this.appendValueInput('GREEN')
-        .setCheck('Number')
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField(Blockly.Msg.COLOUR_RGB_GREEN);
-    this.appendValueInput('BLUE')
-        .setCheck('Number')
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField(Blockly.Msg.COLOUR_RGB_BLUE);
-    this.setOutput(true, 'Colour');
-    this.setTooltip(Blockly.Msg.COLOUR_RGB_TOOLTIP);
+  // Block for composing a colour from RGB components.
+  {
+    'type': 'colour_rgb',
+    'message0':
+        '%{BKY_COLOUR_RGB_TITLE} %{BKY_COLOUR_RGB_RED} %1 %{BKY_COLOUR_RGB_GREEN} %2 %{BKY_COLOUR_RGB_BLUE} %3',
+    'args0': [
+      {
+        'type': 'input_value',
+        'name': 'RED',
+        'check': 'Number',
+        'align': 'RIGHT',
+      },
+      {
+        'type': 'input_value',
+        'name': 'GREEN',
+        'check': 'Number',
+        'align': 'RIGHT',
+      },
+      {
+        'type': 'input_value',
+        'name': 'BLUE',
+        'check': 'Number',
+        'align': 'RIGHT',
+      },
+    ],
+    'output': 'Colour',
+    'helpUrl': '%{BKY_COLOUR_RGB_HELPURL}',
+    'style': 'colour_blocks',
+    'tooltip': '%{BKY_COLOUR_RGB_TOOLTIP}',
   },
-  typeblock: Blockly.Msg.COLOUR_RGB_TYPEBLOCK
-};
 
-Blockly.Blocks['colour_blend'] = {
-  /**
-   * Block for blending two colours together.
-   * @this Blockly.Block
-   */
-  init: function() {
-    this.setHelpUrl(Blockly.Msg.COLOUR_BLEND_HELPURL);
-    this.setColour(Blockly.Blocks.colour.HUE);
-    this.appendValueInput('COLOUR1')
-        .setCheck('Colour')
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField(Blockly.Msg.COLOUR_BLEND_TITLE)
-        .appendField(Blockly.Msg.COLOUR_BLEND_COLOUR1);
-    this.appendValueInput('COLOUR2')
-        .setCheck('Colour')
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField(Blockly.Msg.COLOUR_BLEND_COLOUR2);
-    this.appendValueInput('RATIO')
-        .setCheck('Number')
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField(Blockly.Msg.COLOUR_BLEND_RATIO);
-    this.setOutput(true, 'Colour');
-    this.setTooltip(Blockly.Msg.COLOUR_BLEND_TOOLTIP);
+  // Block for blending two colours together.
+  {
+    'type': 'colour_blend',
+    'message0': '%{BKY_COLOUR_BLEND_TITLE} %{BKY_COLOUR_BLEND_COLOUR1} ' +
+        '%1 %{BKY_COLOUR_BLEND_COLOUR2} %2 %{BKY_COLOUR_BLEND_RATIO} %3',
+    'args0': [
+      {
+        'type': 'input_value',
+        'name': 'COLOUR1',
+        'check': 'Colour',
+        'align': 'RIGHT',
+      },
+      {
+        'type': 'input_value',
+        'name': 'COLOUR2',
+        'check': 'Colour',
+        'align': 'RIGHT',
+      },
+      {
+        'type': 'input_value',
+        'name': 'RATIO',
+        'check': 'Number',
+        'align': 'RIGHT',
+      },
+    ],
+    'output': 'Colour',
+    'helpUrl': '%{BKY_COLOUR_BLEND_HELPURL}',
+    'style': 'colour_blocks',
+    'tooltip': '%{BKY_COLOUR_BLEND_TOOLTIP}',
   },
-  typeblock: Blockly.Msg.COLOUR_BLEND_TYPEBLOCK
-};
+]);
+exports.blocks = blocks;
+
+// Register provided blocks.
+defineBlocks(blocks);

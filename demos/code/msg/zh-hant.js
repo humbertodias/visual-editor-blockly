@@ -5,7 +5,6 @@ var MSG = {
   runTooltip: "於工作區中執行積木組所定義的程式。",
   badCode: "程式錯誤：\n%1",
   timeout: "超過最大執行數。",
-  discard: "刪除共%1個積木？",
   trashTooltip: "捨棄所有積木。",
   catLogic: "邏輯",
   catLoops: "迴圈",
@@ -20,6 +19,6 @@ var MSG = {
   httpRequestError: "命令出現錯誤。",
   linkAlert: "透過此連結分享您的積木組：\n\n%1",
   hashError: "對不起，「%1」並未對應任何已保存的程式。",
-  xmlError: "未能載入您保存的檔案。或許它是由其他版本的Blockly創建？",
-  badXml: "解析 XML 時出現錯誤：\n%1\n\n選擇'確定'以放棄您的更改，或選擇'取消'以進一步編輯 XML。"
+  loadError: "未能載入您保存的檔案。或許它是由其他版本的Blockly創建？",
+  parseError: "解析 %1 時出現錯誤：\n%2\n\n選擇'確定'以放棄您的更改，或選擇'取消'以進一步編輯 %1。"
 };

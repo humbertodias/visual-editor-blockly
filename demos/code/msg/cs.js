@@ -5,7 +5,6 @@ var MSG = {
   runTooltip: "",
   badCode: "Chyba programu:\n%1",
   timeout: "Maximum execution iterations exceeded.",
-  discard: "Odstranit všechny bloky %1?",
   trashTooltip: "Zahodit všechny bloky.",
   catLogic: "Logika",
   catLoops: "Smyčky",
@@ -20,6 +19,6 @@ var MSG = {
   httpRequestError: "Došlo k potížím s požadavkem.",
   linkAlert: "Sdílej bloky tímto odkazem: \n\n%1",
   hashError: "Omlouváme se, '%1' nesouhlasí s žádným z uložených souborů.",
-  xmlError: "Nepodařilo se uložit vás soubor.  Pravděpodobně byl vytvořen jinou verzí Blockly?",
-  badXml: "Chyba parsování XML:\n%1\n\nVybrat \"OK\" pro zahození vašich změn nebo 'Cancel' k dalšímu upravování XML."
+  loadError: "Nepodařilo se uložit vás soubor.  Pravděpodobně byl vytvořen jinou verzí Blockly?",
+  parseError: "Chyba parsování %1:\n%2\n\nVybrat \"OK\" pro zahození vašich změn nebo 'Cancel' k dalšímu upravování %1."
 };

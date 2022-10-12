@@ -5,7 +5,6 @@ var MSG = {
   runTooltip: "",
   badCode: "Qagh:\n%1",
   timeout: "tlhoy nI'qu' poH.",
-  discard: "Hoch %1 ngoghmey Qaw'?",
   trashTooltip: "",
   catLogic: "meq",
   catLoops: "vIHtaHbogh ghomey",
@@ -20,6 +19,6 @@ var MSG = {
   httpRequestError: "Qapbe' tlhobmeH QIn.",
   linkAlert: "latlhvaD ngoghmeylIj DangeHmeH Quvvam yIlo':\n\n%1",
   hashError: "Do'Ha', ngogh nab pollu'pu'bogh 'oHbe'law' \"%1\"'e'.",
-  xmlError: "ngogh nablIj pollu'pu'bogh chu'qa'laHbe' vay'.  chaq pollu'pu'DI' ghunmeH ngogh pIm lo'lu'pu'.",
-  badXml: "XML yajchu'laHbe' vay':\n%1\n\nchoHmeylIj DalonmeH \"ruch\" yIwIv pagh XML DachoHqa'meH \"qIl\" yIwIv."
+  loadError: "ngogh nablIj pollu'pu'bogh chu'qa'laHbe' vay'.  chaq pollu'pu'DI' ghunmeH ngogh pIm lo'lu'pu'.",
+  parseError: "%1 yajchu'laHbe' vay':\n%2\n\nchoHmeylIj DalonmeH \"ruch\" yIwIv pagh %1 DachoHqa'meH \"qIl\" yIwIv."
 };
